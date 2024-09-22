@@ -39,13 +39,7 @@ chmod +x /root/.acme.sh/acme.sh
 cat > /etc/nginx/sites-available/v2ray.conf << END
 server {
     listen 80;
-    listen [::] 80;
-    listen 8080;
-    listen [::] 8080;
-    listen 8880;
-    listen [::] 8880;
     listen 443 ssl;
-    listen [::] 443 ssl;
     server_name $domain;
     ssl_certificate /etc/nginx/ssl/certificate.crt;
     ssl_certificate_key /etc/nginx/ssl/private.key;
@@ -56,9 +50,6 @@ server {
 END
 
 sed -i '$ ilocation ~ /v2ray-vmess {' /etc/nginx/sites-available/v2ray.conf
-sed -i '$ iif ($http_upgrade != "Websocket") {' /etc/nginx/sites-available/v2ray.conf
-sed -i '$ irewrite /(.*) /v2ray-vmess break;' /etc/nginx/sites-available/v2ray.conf
-sed -i '$ i}' /etc/nginx/sites-available/v2ray.conf
 sed -i '$ iproxy_redirect off;' /etc/nginx/sites-available/v2ray.conf
 sed -i '$ iproxy_pass http://127.0.0.1:10000;' /etc/nginx/sites-available/v2ray.conf
 sed -i '$ iproxy_http_version 1.1;' /etc/nginx/sites-available/v2ray.conf
