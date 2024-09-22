@@ -40,7 +40,7 @@ cat > /etc/nginx/sites-available/v2ray.conf << END
 server {
     listen 80;
     listen 443 ssl;
-    server_name $domain;
+    server_name $domainku;
     ssl_certificate /etc/nginx/ssl/certificate.crt;
     ssl_certificate_key /etc/nginx/ssl/private.key;
     ssl_ciphers EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+ECDSA+AES128:EECDH+aRSA+AES128:RSA+AES128:EECDH+ECDSA+AES256:EECDH+aRSA+AES256:RSA+AES256:EECDH+ECDSA+3DES:EECDH+aRSA+3DES:RSA+3DES:!MD5;
