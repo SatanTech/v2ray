@@ -39,34 +39,42 @@ chmod +x /root/.acme.sh/acme.sh
 cat > /etc/nginx/sites-available/v2ray.conf << END
 server {
     listen 80;
+    listen [::] 80;
+    listen 8080;
+    listen [::] 8080;
+    listen 8880;
+    listen [::] 8880;
     listen 443 ssl;
+    listen [::] 443 ssl;
     server_name $domain;
     ssl_certificate /etc/nginx/ssl/certificate.crt;
     ssl_certificate_key /etc/nginx/ssl/private.key;
-    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+ECDSA+AES128:EECDH+aRSA+AES128:RSA+AES128:EECDH+ECDSA+AES256:EECDH+aRSA+AES256:RSA+AES256:EECDH+ECDSA+3DES:EECDH+aRSA+3DES:RSA+3DES:!MD5;
+    ssl_protocols TLSv1.1 TLSv1.2 TLSv1.3;
 
-location ~ /v2ray-vmess {
-if ($http_upgrade != "Websocket") {
-rewrite /(.*) /v2ray-vmess break;
-}
-proxy_redirect off;
-proxy_pass http://127.0.0.1:10000;
-proxy_http_version 1.1;
-proxy_set_header Upgrade \$http_upgrade;
-proxy_set_header Connection "upgrade";
-proxy_set_header Host \$http_host;
-}
-
-location /v2ray-vless {
-proxy_redirect off;
-proxy_pass http://127.0.0.1:10001;
-proxy_http_version 1.1;
-proxy_set_header Upgrade \$http_upgrade;
-proxy_set_header Connection "upgrade";
-proxy_set_header Host \$http_host;
-    }
 }
 END
+
+sed -i '$ ilocation ~ /v2ray-vmess {' /etc/nginx/sites-available/v2ray.conf
+sed -i '$ iif ($http_upgrade != "Websocket") {' /etc/nginx/sites-available/v2ray.conf
+sed -i '$ irewrite /(.*) /v2ray-vmess break;' /etc/nginx/sites-available/v2ray.conf
+sed -i '$ i}' /etc/nginx/sites-available/v2ray.conf
+sed -i '$ iproxy_redirect off;' /etc/nginx/sites-available/v2ray.conf
+sed -i '$ iproxy_pass http://127.0.0.1:10000;' /etc/nginx/sites-available/v2ray.conf
+sed -i '$ iproxy_http_version 1.1;' /etc/nginx/sites-available/v2ray.conf
+sed -i '$ iproxy_set_header Upgrade \$http_upgrade;' /etc/nginx/sites-available/v2ray.conf
+sed -i '$ iproxy_set_header Connection "upgrade";' /etc/nginx/sites-available/v2ray.conf
+sed -i '$ iproxy_set_header Host \$http_host;' /etc/nginx/sites-available/v2ray.conf
+sed -i '$ i}' /etc/nginx/sites-available/v2ray.conf
+
+sed -i '$ ilocation /v2ray-vless {' /etc/nginx/sites-available/v2ray.conf
+sed -i '$ iproxy_redirect off;' /etc/nginx/sites-available/v2ray.conf
+sed -i '$ iproxy_pass http://127.0.0.1:10001;' /etc/nginx/sites-available/v2ray.conf
+sed -i '$ iproxy_http_version 1.1;' /etc/nginx/sites-available/v2ray.conf
+sed -i '$ iproxy_set_header Upgrade \$http_upgrade;' /etc/nginx/sites-available/v2ray.conf
+sed -i '$ iproxy_set_header Connection "upgrade";' /etc/nginx/sites-available/v2ray.conf
+sed -i '$ iproxy_set_header Host \$http_host;' /etc/nginx/sites-available/v2ray.conf
+sed -i '$ i}' /etc/nginx/sites-available/v2ray.conf
 
 # Aktifkan konfigurasi Nginx dan restart
 ln -s /etc/nginx/sites-available/v2ray.conf /etc/nginx/sites-enabled/
@@ -76,8 +84,8 @@ systemctl restart nginx
 cat > /usr/local/etc/v2ray/config.json << END
 {
     "log": {
-        "access": "/var/log/xray/access.log",
-        "error": "/var/log/xray/error.log",
+        "access": "/var/log/v2ray/access.log",
+        "error": "/var/log/v2ray/error.log",
         "loglevel": "info"
     },
     "inbounds": [
@@ -206,7 +214,5 @@ END
 
 # Restart V2Ray untuk menerapkan konfigurasi
 systemctl restart v2ray
-
-wget -q https://raw.githubusercontent.com/SatanTech/v2ray/refs/heads/main/vmess.sh && chmod +x *
 
 echo "Instalasi selesai. VMess dan VLESS berjalan di domain $domain dengan port 443."
