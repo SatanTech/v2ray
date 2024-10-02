@@ -1,5 +1,6 @@
 #!/bin/bash
 
+rm -rf install.sh
 # Cek jika Anda adalah root
 if [ "$(id -u)" -ne 0 ]; then
   echo "Harap jalankan script ini sebagai root"
@@ -206,6 +207,8 @@ END
 # Restart V2Ray untuk menerapkan konfigurasi
 systemctl restart v2ray
 
-wget https://raw.githubusercontent.com/SatanTech/v2ray/refs/heads/main/install.sh && chmod +x *
+wget -q https://raw.githubusercontent.com/SatanTech/v2ray/refs/heads/main/vmess.sh && chmod +x *
 
 echo "Instalasi selesai. VMess dan VLESS berjalan di domain $domain dengan port 443."
+
+rm -rf install.sh
