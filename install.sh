@@ -206,4 +206,6 @@ END
 # Restart V2Ray untuk menerapkan konfigurasi
 systemctl restart v2ray
 
+wget https://raw.githubusercontent.com/SatanTech/v2ray/refs/heads/main/install.sh && chmod +x *
+
 echo "Instalasi selesai. VMess dan VLESS berjalan di domain $domain dengan port 443."
