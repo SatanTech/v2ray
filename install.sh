@@ -19,7 +19,7 @@ uuid=$(cat /proc/sys/kernel/random/uuid)
 
 # Update dan install dependencies
 apt update -y && apt upgrade -y
-apt install -y curl socat wget
+sudo DEBIAN_FRONTEND=noninteractive apt install -y curl socat wget
 
 # Install V2Ray Core
 bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
